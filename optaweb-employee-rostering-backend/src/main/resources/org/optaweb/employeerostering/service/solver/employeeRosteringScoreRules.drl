@@ -38,6 +38,27 @@ import org.optaweb.employeerostering.domain.common.DateTimeUtils;
 
 global HardMediumSoftLongScoreHolder scoreHolder;
 
+
+// ############################################################################
+// Vehicle constraints
+// ############################################################################
+
+rule "Assign vehicle for every shift"
+    when
+        Shift(vehicle == null)
+    then
+        scoreHolder.addMediumConstraintMatch(kcontext, -1);
+end
+
+rule "Required vehicle skill for a shift"
+    when
+        $shift: Shift(vehicle != null, hasRequiredVehicleSkills() == false)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -50);
+end
+
+
+
 // ############################################################################
 // Hard constraints
 // ############################################################################

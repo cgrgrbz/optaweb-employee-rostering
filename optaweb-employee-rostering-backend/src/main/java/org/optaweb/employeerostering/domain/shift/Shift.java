@@ -178,11 +178,15 @@ public class Shift extends AbstractPersistable {
         return originalEmployee != null && originalEmployee != employee;
     }
 
+    //check if employee has spot skills??
     public boolean hasRequiredSkills() {
-        return employee.getSkillProficiencySet().containsAll(spot.getRequiredSkillSet()) &&
-                employee.getSkillProficiencySet().containsAll(requiredSkillSet);
+        return employee.getSkillProficiencySet().containsAll(spot.getRequiredSkillSet());
     }
 
+    //check if the vehicle has required skills??
+    public boolean hasRequiredVehicleSkills() {
+    	return vehicle.getSkillProficiencySet().containsAll(requiredSkillSet);
+    }
     // ************************************************************************
     // Simple getters and setters
     // ************************************************************************

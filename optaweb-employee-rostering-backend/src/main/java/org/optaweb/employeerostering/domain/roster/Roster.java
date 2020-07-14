@@ -148,6 +148,22 @@ public class Roster extends AbstractPersistable {
 		this.employeeAvailabilityList = employeeAvailabilityList;
 	}
 
+	public List<Vehicle> getVehicleList() {
+		return vehicleList;
+	}
+
+	public void setVehicleList(List<Vehicle> vehicleList) {
+		this.vehicleList = vehicleList;
+	}
+
+	public List<VehicleAvailability> getVehicleAvailabilityList() {
+		return vehicleAvailabilityList;
+	}
+
+	public void setVehicleAvailabilityList(List<VehicleAvailability> vehicleAvailabilityList) {
+		this.vehicleAvailabilityList = vehicleAvailabilityList;
+	}
+
 	public RosterState getRosterState() {
 		return rosterState;
 	}
