@@ -28,6 +28,7 @@ import javax.persistence.EntityNotFoundException;
 import org.optaplanner.core.api.score.constraint.Indictment;
 import org.optaweb.employeerostering.domain.employee.Employee;
 import org.optaweb.employeerostering.domain.shift.Shift;
+import org.optaweb.employeerostering.domain.shift.ShiftType;
 import org.optaweb.employeerostering.domain.shift.view.ShiftView;
 import org.optaweb.employeerostering.domain.skill.Skill;
 import org.optaweb.employeerostering.domain.spot.Spot;
@@ -145,9 +146,10 @@ public class ShiftService extends AbstractRestService {
 			validateTenantIdParameter(tenantId, originalVehicle);
 		}
 
-
+		ShiftType type = shiftView.getType();
+		
 		Shift shift = new Shift(rosterService.getRosterState(tenantId).getTimeZone(), shiftView, spot, rotationEmployee,
-				requiredSkillSet, originalEmployee, rotationVehicle, originalVehicle);
+				requiredSkillSet, originalEmployee, rotationVehicle, originalVehicle, type);
 		
 		shift.setPinnedByUser(shiftView.isPinnedByUser());
 

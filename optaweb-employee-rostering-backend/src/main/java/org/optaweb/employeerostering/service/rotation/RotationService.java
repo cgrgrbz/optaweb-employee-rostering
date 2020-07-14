@@ -28,12 +28,14 @@ import org.optaweb.employeerostering.domain.employee.Employee;
 import org.optaweb.employeerostering.domain.roster.RosterState;
 import org.optaweb.employeerostering.domain.rotation.ShiftTemplate;
 import org.optaweb.employeerostering.domain.rotation.view.ShiftTemplateView;
+import org.optaweb.employeerostering.domain.shift.ShiftType;
 import org.optaweb.employeerostering.domain.skill.Skill;
 import org.optaweb.employeerostering.domain.spot.Spot;
 import org.optaweb.employeerostering.domain.vehicle.Vehicle;
 import org.optaweb.employeerostering.service.common.AbstractRestService;
 import org.optaweb.employeerostering.service.employee.EmployeeService;
 import org.optaweb.employeerostering.service.roster.RosterService;
+import org.optaweb.employeerostering.service.shift.ShiftService;
 import org.optaweb.employeerostering.service.skill.SkillService;
 import org.optaweb.employeerostering.service.spot.SpotService;
 import org.optaweb.employeerostering.service.vehicle.VehicleService;
@@ -86,6 +88,7 @@ public class RotationService extends AbstractRestService {
                 .stream().map(id -> skillService.getSkill(tenantId, id))
                 .collect(Collectors.toCollection(HashSet::new));
     }
+    
 
     @Transactional
     public ShiftTemplateView getShiftTemplate(Integer tenantId, Long id) {
@@ -106,7 +109,7 @@ public class RotationService extends AbstractRestService {
         Set<Skill> requiredSkillSet = getRequiredSkillSet(tenantId, shiftTemplateView);
 
         Vehicle vehicle;
-
+        
         if (shiftTemplateView.getRotationEmployeeId() != null) {
             employee = employeeService.getEmployee(tenantId, shiftTemplateView.getRotationEmployeeId());
         } else {
@@ -119,8 +122,10 @@ public class RotationService extends AbstractRestService {
         	vehicle = null;
         }
 
+        ShiftType type = shiftTemplateView.getType();
+        
         ShiftTemplate shiftTemplate = new ShiftTemplate(rosterState.getRotationLength(), shiftTemplateView, spot,
-                                                        employee, requiredSkillSet, vehicle);
+                                                        employee, requiredSkillSet, vehicle, type);
         validateTenantIdParameter(tenantId, shiftTemplate);
         shiftTemplateRepository.save(shiftTemplate);
         return new ShiftTemplateView(rosterState.getRotationLength(), shiftTemplate);
@@ -146,9 +151,11 @@ public class RotationService extends AbstractRestService {
         } else {
         	vehicle = null;
         }
+        
+        ShiftType type = shiftTemplateView.getType();
 
         ShiftTemplate newShiftTemplate = new ShiftTemplate(rosterState.getRotationLength(), shiftTemplateView, spot,
-                                                           employee, requiredSkillSet, vehicle);
+                                                           employee, requiredSkillSet, vehicle, type);
         validateTenantIdParameter(tenantId, newShiftTemplate);
 
         ShiftTemplate oldShiftTemplate = shiftTemplateRepository

@@ -29,7 +29,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
@@ -54,6 +53,8 @@ public class Shift extends AbstractPersistable {
     @NotNull
     @ManyToOne
     private Spot spot;
+    
+    private ShiftType type;
     
     @NotNull
     @ManyToMany(fetch = FetchType.EAGER)
@@ -101,17 +102,17 @@ public class Shift extends AbstractPersistable {
     }
 
     public Shift(Integer tenantId, Spot spot, OffsetDateTime startDateTime, OffsetDateTime endDateTime) {
-        this(tenantId, spot, startDateTime, endDateTime, null, null);
+        this(tenantId, spot, startDateTime, endDateTime, null, null, null);
     }
 
     public Shift(Integer tenantId, Spot spot, OffsetDateTime startDateTime, OffsetDateTime endDateTime,
-            Employee rotationEmployee, Vehicle rotationVehicle) {
-        this(tenantId, spot, startDateTime, endDateTime, rotationEmployee, new HashSet<>(), null, rotationVehicle, null);
+            Employee rotationEmployee, Vehicle rotationVehicle, ShiftType type) {
+        this(tenantId, spot, startDateTime, endDateTime, rotationEmployee, new HashSet<>(), null, rotationVehicle, null, null);
     }
 
     public Shift(Integer tenantId, Spot spot, OffsetDateTime startDateTime, OffsetDateTime endDateTime,
             Employee rotationEmployee, Set<Skill> requiredSkillSet, Employee originalEmployee,
-            Vehicle rotationVehicle, Vehicle originalVehicle) {
+            Vehicle rotationVehicle, Vehicle originalVehicle, ShiftType type) {
         super(tenantId);
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
@@ -123,19 +124,20 @@ public class Shift extends AbstractPersistable {
         this.rotationVehicle = rotationVehicle;
         this.originalVehicle = originalVehicle;
         
+        this.type = type;        
     }
 
     public Shift(ZoneId zoneId, ShiftView shiftView, Spot spot) {
-        this(zoneId, shiftView, spot, null, null);
+        this(zoneId, shiftView, spot, null, null, null);
     }
 
-    public Shift(ZoneId zoneId, ShiftView shiftView, Spot spot, Employee rotationEmployee, Vehicle rotationVehicle) {
-        this(zoneId, shiftView, spot, rotationEmployee, new HashSet<>(), null, null, null);
+    public Shift(ZoneId zoneId, ShiftView shiftView, Spot spot, Employee rotationEmployee, Vehicle rotationVehicle, ShiftType type) {
+        this(zoneId, shiftView, spot, rotationEmployee, new HashSet<>(), null, null, null, null);
     }
 
     public Shift(ZoneId zoneId, ShiftView shiftView, Spot spot,
     		Employee rotationEmployee, Set<Skill> requiredSkillSet, Employee originalEmployee,
-    		Vehicle rotationVehicle, Vehicle originalVehicle) {
+    		Vehicle rotationVehicle, Vehicle originalVehicle, ShiftType type) {
         super(shiftView);
         this.startDateTime = OffsetDateTime.of(shiftView.getStartDateTime(),
                 zoneId.getRules().getOffset(shiftView.getStartDateTime()));
@@ -149,6 +151,7 @@ public class Shift extends AbstractPersistable {
         
         this.rotationVehicle = rotationVehicle;
         this.originalVehicle = originalVehicle;
+        this.type = type;
     }
 
     @Override
@@ -289,11 +292,20 @@ public class Shift extends AbstractPersistable {
 		this.originalVehicle = originalVehicle;
 	}
 
+	public ShiftType getType() {
+		return type;
+	}
+
+	public void setType(ShiftType type) {
+		this.type = type;
+	}
+
 	public Shift inTimeZone(ZoneId zoneId) {
         Shift out = new Shift(zoneId, new ShiftView(zoneId, this), getSpot(), 
         		getRotationEmployee(), getRequiredSkillSet(), getOriginalEmployee(), 
-        		getRotationVehicle(), getOriginalVehicle());
+        		getRotationVehicle(), getOriginalVehicle(), getType());
         out.setEmployee(getEmployee());
+        out.setVehicle(getVehicle());
         return out;
     }
 }

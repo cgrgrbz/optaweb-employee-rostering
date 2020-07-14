@@ -31,6 +31,7 @@ import org.optaweb.employeerostering.domain.common.AbstractPersistable;
 import org.optaweb.employeerostering.domain.common.DateTimeUtils;
 import org.optaweb.employeerostering.domain.employee.Employee;
 import org.optaweb.employeerostering.domain.shift.Shift;
+import org.optaweb.employeerostering.domain.shift.ShiftType;
 import org.optaweb.employeerostering.domain.skill.Skill;
 import org.optaweb.employeerostering.domain.spot.Spot;
 import org.optaweb.employeerostering.domain.vehicle.Vehicle;
@@ -77,8 +78,7 @@ public class ShiftView extends AbstractPersistable {
     private Long employeeId = null;
     private Long originalEmployeeId = null;
     
-    
-    
+    private ShiftType type;    
     
     private Long rotationVehicleId;    
     private boolean pinnedVehicleByUser = false;
@@ -92,17 +92,17 @@ public class ShiftView extends AbstractPersistable {
     }
 
     public ShiftView(Integer tenantId, Spot spot, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this(tenantId, spot, startDateTime, endDateTime, null, null);
+        this(tenantId, spot, startDateTime, endDateTime, null, null, null);
     }
 
     public ShiftView(Integer tenantId, Spot spot, LocalDateTime startDateTime, LocalDateTime endDateTime,
-                     Employee rotationEmployee, Vehicle rotationVehicle) {
-        this(tenantId, spot, startDateTime, endDateTime, null, new ArrayList<>(), null, null, null);
+                     Employee rotationEmployee, Vehicle rotationVehicle, ShiftType type) {
+        this(tenantId, spot, startDateTime, endDateTime, null, new ArrayList<>(), null, null, null, null);
     }
 
     public ShiftView(Integer tenantId, Spot spot, LocalDateTime startDateTime, LocalDateTime endDateTime,
                      Employee rotationEmployee, List<Long> requiredSkillSetIdList, Employee originalEmployee,
-                     Vehicle rotationVehicle, Vehicle originalVehicle) {
+                     Vehicle rotationVehicle, Vehicle originalVehicle, ShiftType type) {
         super(tenantId);
         this.spotId = spot.getId();
         this.startDateTime = startDateTime;
@@ -123,6 +123,8 @@ public class ShiftView extends AbstractPersistable {
         this.contractMinutesViolationPenaltyList = null;
         this.noBreakViolationList = null;
         this.indictmentScore = null;
+        
+        this.type = (type == null) ? ShiftType.ONEWAY : type;
 
         this.requiredSkillSetIdList = requiredSkillSetIdList;
     }
@@ -371,4 +373,12 @@ public class ShiftView extends AbstractPersistable {
             List<PublishedShiftReassignedPenalty> publishedShiftReassignedPenaltyList) {
         this.publishedShiftReassignedPenaltyList = publishedShiftReassignedPenaltyList;
     }
+
+	public ShiftType getType() {
+		return type;
+	}
+
+	public void setType(ShiftType type) {
+		this.type = type;
+	}
 }

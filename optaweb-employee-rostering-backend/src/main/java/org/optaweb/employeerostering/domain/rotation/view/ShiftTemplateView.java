@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer;
 import org.optaweb.employeerostering.domain.common.AbstractPersistable;
 import org.optaweb.employeerostering.domain.rotation.ShiftTemplate;
+import org.optaweb.employeerostering.domain.shift.ShiftType;
 import org.optaweb.employeerostering.domain.skill.Skill;
 
 public class ShiftTemplateView extends AbstractPersistable {
@@ -38,6 +39,8 @@ public class ShiftTemplateView extends AbstractPersistable {
 
 	private Long rotationVehicleId;
 
+	private ShiftType type;
+	
 	public ShiftTemplateView() {
 	}
 
@@ -61,11 +64,13 @@ public class ShiftTemplateView extends AbstractPersistable {
 		this.rotationVehicleId = (shiftTemplate.getRotationVehicle() != null)
 				? shiftTemplate.getRotationVehicle().getId()
 				: null;
+
+		this.type = (type == null) ? ShiftType.ONEWAY : type;
 	}
 
 	public ShiftTemplateView(Integer tenantId, Long spotId, Duration durationBetweenRotationStartAndTemplateStart,
 			Duration shiftTemplateDuration, Long rotationEmployeeId, List<Long> requiredSkillSetIdList,
-			Long rotationVehicleId) {
+			Long rotationVehicleId, ShiftType type) {
 		super(tenantId);
 		this.spotId = spotId;
 		this.durationBetweenRotationStartAndTemplateStart = durationBetweenRotationStartAndTemplateStart;
@@ -74,6 +79,8 @@ public class ShiftTemplateView extends AbstractPersistable {
 		this.requiredSkillSetIdList = requiredSkillSetIdList;
 
 		this.rotationVehicleId = rotationVehicleId;
+		
+		this.type = type;
 	}
 
 	public Long getSpotId() {
@@ -124,5 +131,13 @@ public class ShiftTemplateView extends AbstractPersistable {
 
 	public void setRotationVehicleId(Long rotationVehicleId) {
 		this.rotationVehicleId = rotationVehicleId;
+	}
+
+	public ShiftType getType() {
+		return type;
+	}
+
+	public void setType(ShiftType type) {
+		this.type = type;
 	}
 }
