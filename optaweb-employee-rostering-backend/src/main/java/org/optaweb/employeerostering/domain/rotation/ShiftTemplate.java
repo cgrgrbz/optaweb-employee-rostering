@@ -57,6 +57,14 @@ public class ShiftTemplate extends AbstractPersistable {
             inverseJoinColumns = @JoinColumn(name = "skillId", referencedColumnName = "id")
     )
     private Set<Skill> requiredSkillSet;
+    
+    @NotNull
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "ShiftTemplateRequiredSkillSet2",
+            joinColumns = @JoinColumn(name = "shiftTemplateId", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "skillId", referencedColumnName = "id")
+    )
+    private Set<Skill> requiredSkillSet2;
 
     @NotNull
     private Integer startDayOffset;
@@ -90,12 +98,12 @@ public class ShiftTemplate extends AbstractPersistable {
                          int startDayOffset, LocalTime startTime, int endDayOffset, LocalTime endTime,
                          Employee rotationEmployee, Vehicle rotationVehicle) {
         this(tenantId, spot, startDayOffset, startTime, endDayOffset, endTime, 
-        		rotationEmployee, Collections.emptySet(), rotationVehicle, null);
+        		rotationEmployee, Collections.emptySet(), Collections.emptySet(), rotationVehicle, null);
     }
 
     public ShiftTemplate(Integer tenantId, Spot spot,
                          int startDayOffset, LocalTime startTime, int endDayOffset, LocalTime endTime,
-                         Employee rotationEmployee, Collection<Skill> requiredSkillSet,
+                         Employee rotationEmployee, Collection<Skill> requiredSkillSet, Collection<Skill> requiredSkillSet2,
                          Vehicle rotationVehicle, ShiftType type) {
         super(tenantId);
         this.rotationEmployee = rotationEmployee;
@@ -105,13 +113,14 @@ public class ShiftTemplate extends AbstractPersistable {
         this.startTime = startTime;
         this.endTime = endTime;
         this.requiredSkillSet = new HashSet<>(requiredSkillSet);
+        this.requiredSkillSet2 = new HashSet<>(requiredSkillSet2);
         this.type = type;
         
         this.rotationVehicle= rotationVehicle;      
     }
 
     public ShiftTemplate(Integer rotationLength, ShiftTemplateView shiftTemplateView, Spot spot,
-    		Employee rotationEmployee, Collection<Skill> requiredSkillSet,
+    		Employee rotationEmployee, Collection<Skill> requiredSkillSet, Collection<Skill> requiredSkillSet2,
     		Vehicle rotationVehicle, ShiftType type) {
         super(shiftTemplateView);
         this.spot = spot;
@@ -133,7 +142,9 @@ public class ShiftTemplate extends AbstractPersistable {
                                                        .minusDays(endDayAfterStartDay)
                                                        .getSeconds());
         this.endDayOffset = endDayAfterStartDay % rotationLength;
+        
         this.requiredSkillSet = new HashSet<>(requiredSkillSet);
+        this.requiredSkillSet2 = new HashSet<>(requiredSkillSet2);
         
         this.rotationVehicle= rotationVehicle;
         
@@ -158,7 +169,7 @@ public class ShiftTemplate extends AbstractPersistable {
                                                                zoneId.getRules().getOffset(startDateTime));
         OffsetDateTime endOffsetDateTime = OffsetDateTime.of(endDateTime, zoneId.getRules().getOffset(endDateTime));
         Shift shift = new Shift(getTenantId(), getSpot(), startOffsetDateTime, endOffsetDateTime, 
-        		rotationEmployee, new HashSet<>(requiredSkillSet), null,
+        		rotationEmployee, new HashSet<>(requiredSkillSet), new HashSet<>(requiredSkillSet2), null,
         		rotationVehicle, null, null);
         if (defaultToRotationEmployee) {
             shift.setEmployee(rotationEmployee);
@@ -228,6 +239,22 @@ public class ShiftTemplate extends AbstractPersistable {
     public void setRequiredSkillSet(Set<Skill> requiredSkillSet) {
         this.requiredSkillSet = requiredSkillSet;
     }
+
+	public Set<Skill> getRequiredSkillSet2() {
+		return requiredSkillSet2;
+	}
+
+	public void setRequiredSkillSet2(Set<Skill> requiredSkillSet2) {
+		this.requiredSkillSet2 = requiredSkillSet2;
+	}
+
+	public ShiftType getType() {
+		return type;
+	}
+
+	public void setType(ShiftType type) {
+		this.type = type;
+	}
 
 	public Vehicle getRotationVehicle() {
 		return rotationVehicle;

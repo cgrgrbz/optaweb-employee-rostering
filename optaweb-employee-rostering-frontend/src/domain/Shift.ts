@@ -33,7 +33,8 @@ export interface Shift extends DomainObject {
   startDateTime: Date;
   endDateTime: Date;
   spot: Spot;
-  requiredSkillSet: Skill[];
+  requiredSkillSet: Skill[];  
+  requiredSkillSet2: Skill[];
   rotationEmployee: Employee | null;
   employee: Employee | null;
   originalEmployee: Employee | null;

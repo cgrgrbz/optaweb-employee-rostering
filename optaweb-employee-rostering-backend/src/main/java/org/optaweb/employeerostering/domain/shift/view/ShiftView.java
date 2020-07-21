@@ -53,6 +53,8 @@ public class ShiftView extends AbstractPersistable {
     private Long spotId;
     @NotNull
     private List<Long> requiredSkillSetIdList;
+    @NotNull
+    private List<Long> requiredSkillSet2IdList;
 
     @NotNull
     private LocalDateTime startDateTime;
@@ -97,11 +99,11 @@ public class ShiftView extends AbstractPersistable {
 
     public ShiftView(Integer tenantId, Spot spot, LocalDateTime startDateTime, LocalDateTime endDateTime,
                      Employee rotationEmployee, Vehicle rotationVehicle, ShiftType type) {
-        this(tenantId, spot, startDateTime, endDateTime, null, new ArrayList<>(), null, null, null, null);
+        this(tenantId, spot, startDateTime, endDateTime, null, new ArrayList<>(), new ArrayList<>(), null, null, null, null);
     }
 
     public ShiftView(Integer tenantId, Spot spot, LocalDateTime startDateTime, LocalDateTime endDateTime,
-                     Employee rotationEmployee, List<Long> requiredSkillSetIdList, Employee originalEmployee,
+                     Employee rotationEmployee, List<Long> requiredSkillSetIdList, List<Long> requiredSkillSet2IdList, Employee originalEmployee,
                      Vehicle rotationVehicle, Vehicle originalVehicle, ShiftType type) {
         super(tenantId);
         this.spotId = spot.getId();
@@ -110,7 +112,6 @@ public class ShiftView extends AbstractPersistable {
         this.rotationEmployeeId = (rotationEmployee == null) ? null : rotationEmployee.getId();
         this.originalEmployeeId = (originalEmployee == null) ? null : originalEmployee.getId();
         
-
         this.rotationVehicleId = (rotationVehicle == null) ? null : rotationVehicle.getId();
         this.originalVehicleId = (originalVehicle == null) ? null : originalVehicle.getId();
 
@@ -127,6 +128,8 @@ public class ShiftView extends AbstractPersistable {
         this.type = (type == null) ? ShiftType.ONEWAY : type;
 
         this.requiredSkillSetIdList = requiredSkillSetIdList;
+
+        this.requiredSkillSet2IdList = requiredSkillSet2IdList;
     }
 
     public ShiftView(ZoneId zoneId, Shift shift) {
@@ -147,6 +150,8 @@ public class ShiftView extends AbstractPersistable {
         super(shift);
         this.spotId = shift.getSpot().getId();
         this.requiredSkillSetIdList = shift.getRequiredSkillSet().stream()
+                .map(Skill::getId).sorted().collect(Collectors.toCollection(ArrayList::new));
+        this.requiredSkillSet2IdList = shift.getRequiredSkillSet2().stream()
                 .map(Skill::getId).sorted().collect(Collectors.toCollection(ArrayList::new));
         this.startDateTime = DateTimeUtils.toLocalDateTimeInZone(shift.getStartDateTime(), zoneId);
         this.endDateTime = DateTimeUtils.toLocalDateTimeInZone(shift.getEndDateTime(), zoneId);
@@ -241,7 +246,15 @@ public class ShiftView extends AbstractPersistable {
         this.requiredSkillSetIdList = requiredSkillSetIdList;
     }
 
-    public Long getOriginalEmployeeId() {
+    public List<Long> getRequiredSkillSet2IdList() {
+		return requiredSkillSet2IdList;
+	}
+
+	public void setRequiredSkillSet2IdList(List<Long> requiredSkillSet2IdList) {
+		this.requiredSkillSet2IdList = requiredSkillSet2IdList;
+	}
+
+	public Long getOriginalEmployeeId() {
         return originalEmployeeId;
     }
 

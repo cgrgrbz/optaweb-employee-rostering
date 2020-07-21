@@ -125,8 +125,11 @@ public class ShiftService extends AbstractRestService {
 
 		Set<Skill> requiredSkillSet = shiftView.getRequiredSkillSetIdList().stream()
 				.map(id -> skillService.getSkill(tenantId, id)).collect(Collectors.toCollection(HashSet::new));
-
 		
+		//or skills
+		Set<Skill> requiredSkillSet2 = shiftView.getRequiredSkillSet2IdList().stream()
+				.map(id -> skillService.getSkill(tenantId, id)).collect(Collectors.toCollection(HashSet::new));
+
 		
 		Long rotationVehicleId = shiftView.getRotationVehicleId();
 		Vehicle rotationVehicle = null;
@@ -149,7 +152,7 @@ public class ShiftService extends AbstractRestService {
 		ShiftType type = shiftView.getType();
 		
 		Shift shift = new Shift(rosterService.getRosterState(tenantId).getTimeZone(), shiftView, spot, rotationEmployee,
-				requiredSkillSet, originalEmployee, rotationVehicle, originalVehicle, type);
+				requiredSkillSet, requiredSkillSet2, originalEmployee, rotationVehicle, originalVehicle, type);
 		
 		shift.setPinnedByUser(shiftView.isPinnedByUser());
 
@@ -212,6 +215,7 @@ public class ShiftService extends AbstractRestService {
 		oldShift.setPinnedByUser(newShift.isPinnedByUser());
 		
 		oldShift.setRequiredSkillSet(newShift.getRequiredSkillSet());
+		oldShift.setRequiredSkillSet2(newShift.getRequiredSkillSet2());
 
 		// Flush to increase version number before we duplicate it to ShiftView
 		Shift updatedShift = shiftRepository.saveAndFlush(oldShift);

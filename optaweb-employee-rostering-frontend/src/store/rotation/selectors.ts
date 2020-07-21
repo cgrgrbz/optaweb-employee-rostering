@@ -32,9 +32,10 @@ export const getShiftTemplateById = (state: AppState, id: number): ShiftTemplate
   }
   const shiftTemplateView = state.shiftTemplateList.shiftTemplateMapById.get(id) as DomainObjectView<ShiftTemplate>;
   return {
-    ...objectWithout(shiftTemplateView, 'spot', 'rotationEmployee', 'requiredSkillSet'),
+    ...objectWithout(shiftTemplateView, 'spot', 'rotationEmployee', 'requiredSkillSet', 'requiredSkillSet2'),
     spot: spotSelectors.getSpotById(state, shiftTemplateView.spot),
     requiredSkillSet: shiftTemplateView.requiredSkillSet.map(skillId => skillSelectors.getSkillById(state, skillId)),
+    requiredSkillSet2: shiftTemplateView.requiredSkillSet2.map(skillId => skillSelectors.getSkillById(state, skillId)),
     rotationEmployee: shiftTemplateView.rotationEmployee
       ? employeeSelectors.getEmployeeById(state, shiftTemplateView.rotationEmployee) : null,
   };

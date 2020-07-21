@@ -32,6 +32,7 @@ public class ShiftTemplateView extends AbstractPersistable {
 
 	private Long spotId;
 	private List<Long> requiredSkillSetIdList;
+	private List<Long> requiredSkillSet2IdList;
 
 	private Long rotationEmployeeId;
 	private Duration durationBetweenRotationStartAndTemplateStart;
@@ -61,6 +62,9 @@ public class ShiftTemplateView extends AbstractPersistable {
 		this.requiredSkillSetIdList = shiftTemplate.getRequiredSkillSet().stream().map(Skill::getId).sorted()
 				.collect(Collectors.toCollection(ArrayList::new));
 
+		this.requiredSkillSet2IdList = shiftTemplate.getRequiredSkillSet2().stream().map(Skill::getId).sorted()
+				.collect(Collectors.toCollection(ArrayList::new));
+
 		this.rotationVehicleId = (shiftTemplate.getRotationVehicle() != null)
 				? shiftTemplate.getRotationVehicle().getId()
 				: null;
@@ -69,7 +73,7 @@ public class ShiftTemplateView extends AbstractPersistable {
 	}
 
 	public ShiftTemplateView(Integer tenantId, Long spotId, Duration durationBetweenRotationStartAndTemplateStart,
-			Duration shiftTemplateDuration, Long rotationEmployeeId, List<Long> requiredSkillSetIdList,
+			Duration shiftTemplateDuration, Long rotationEmployeeId, List<Long> requiredSkillSetIdList, List<Long> requiredSkillSet2IdList,
 			Long rotationVehicleId, ShiftType type) {
 		super(tenantId);
 		this.spotId = spotId;
@@ -77,6 +81,7 @@ public class ShiftTemplateView extends AbstractPersistable {
 		this.shiftTemplateDuration = shiftTemplateDuration;
 		this.rotationEmployeeId = rotationEmployeeId;
 		this.requiredSkillSetIdList = requiredSkillSetIdList;
+		this.requiredSkillSet2IdList = requiredSkillSet2IdList;
 
 		this.rotationVehicleId = rotationVehicleId;
 		
@@ -123,6 +128,14 @@ public class ShiftTemplateView extends AbstractPersistable {
 
 	public void setRequiredSkillSetIdList(List<Long> requiredSkillSetIdList) {
 		this.requiredSkillSetIdList = requiredSkillSetIdList;
+	}
+
+	public List<Long> getRequiredSkillSet2IdList() {
+		return requiredSkillSet2IdList;
+	}
+
+	public void setRequiredSkillSet2IdList(List<Long> requiredSkillSet2IdList) {
+		this.requiredSkillSet2IdList = requiredSkillSet2IdList;
 	}
 
 	public Long getRotationVehicleId() {

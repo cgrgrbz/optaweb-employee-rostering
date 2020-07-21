@@ -360,6 +360,7 @@ export class RotationPage extends React.Component<Props & WithTranslation, State
                 spot: shownSpot,
                 rotationEmployee: null,
                 requiredSkillSet: [],
+                requiredSkillSet2: [],
               });
             }
           }

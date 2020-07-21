@@ -381,6 +381,7 @@ export class ShiftRosterPage extends React.Component<Props, State> {
                 pinnedByUser: false,
                 originalEmployee: null,
                 requiredSkillSet: [],
+                requiredSkillSet2: [],
               });
             }
           }

@@ -62,7 +62,17 @@ public class Shift extends AbstractPersistable {
             joinColumns = @JoinColumn(name = "shiftId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "skillId", referencedColumnName = "id")
     )
+    //let's say this is AND skills
     private Set<Skill> requiredSkillSet;
+    
+    @NotNull
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "ShiftRequiredSkillSet2",
+            joinColumns = @JoinColumn(name = "shiftId", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "skillId", referencedColumnName = "id")
+    )
+    //let's say this is OR skills
+    private Set<Skill> requiredSkillSet2;
     
     @NotNull
     private OffsetDateTime startDateTime;
@@ -107,18 +117,21 @@ public class Shift extends AbstractPersistable {
 
     public Shift(Integer tenantId, Spot spot, OffsetDateTime startDateTime, OffsetDateTime endDateTime,
             Employee rotationEmployee, Vehicle rotationVehicle, ShiftType type) {
-        this(tenantId, spot, startDateTime, endDateTime, rotationEmployee, new HashSet<>(), null, rotationVehicle, null, null);
+        this(tenantId, spot, startDateTime, endDateTime, rotationEmployee, new HashSet<>(), new HashSet<>(), null, rotationVehicle, null, null);
     }
 
     public Shift(Integer tenantId, Spot spot, OffsetDateTime startDateTime, OffsetDateTime endDateTime,
-            Employee rotationEmployee, Set<Skill> requiredSkillSet, Employee originalEmployee,
+            Employee rotationEmployee, Set<Skill> requiredSkillSet, Set<Skill> requiredSkillSet2, Employee originalEmployee,
             Vehicle rotationVehicle, Vehicle originalVehicle, ShiftType type) {
         super(tenantId);
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.spot = spot;
         this.rotationEmployee = rotationEmployee;
+        
         this.requiredSkillSet = requiredSkillSet;
+        this.requiredSkillSet2 = requiredSkillSet2;
+        
         this.originalEmployee = originalEmployee;
 
         this.rotationVehicle = rotationVehicle;
@@ -132,11 +145,11 @@ public class Shift extends AbstractPersistable {
     }
 
     public Shift(ZoneId zoneId, ShiftView shiftView, Spot spot, Employee rotationEmployee, Vehicle rotationVehicle, ShiftType type) {
-        this(zoneId, shiftView, spot, rotationEmployee, new HashSet<>(), null, null, null, null);
+        this(zoneId, shiftView, spot, rotationEmployee, new HashSet<>(), new HashSet<>(), null, null, null, null);
     }
 
     public Shift(ZoneId zoneId, ShiftView shiftView, Spot spot,
-    		Employee rotationEmployee, Set<Skill> requiredSkillSet, Employee originalEmployee,
+    		Employee rotationEmployee, Set<Skill> requiredSkillSet, Set<Skill> requiredSkillSet2, Employee originalEmployee,
     		Vehicle rotationVehicle, Vehicle originalVehicle, ShiftType type) {
         super(shiftView);
         this.startDateTime = OffsetDateTime.of(shiftView.getStartDateTime(),
@@ -147,6 +160,7 @@ public class Shift extends AbstractPersistable {
         this.pinnedByUser = shiftView.isPinnedByUser();
         this.rotationEmployee = rotationEmployee;
         this.requiredSkillSet = requiredSkillSet;
+        this.requiredSkillSet2 = requiredSkillSet2;
         this.originalEmployee = originalEmployee;
         
         this.rotationVehicle = rotationVehicle;
@@ -186,10 +200,16 @@ public class Shift extends AbstractPersistable {
         return employee.getSkillProficiencySet().containsAll(spot.getRequiredSkillSet());
     }
 
-    //check if the vehicle has required skills??
+    //check if the vehicle has ALL required skills??
     public boolean hasRequiredVehicleSkills() {
     	return vehicle.getSkillProficiencySet().containsAll(requiredSkillSet);
     }
+    
+    //TODO check if the vehicle has at least one of OR skills??
+    public boolean hasSomeVehicleSkills() {
+    	return vehicle.getSkillProficiencySet().containsAll(requiredSkillSet);
+    }
+    
     // ************************************************************************
     // Simple getters and setters
     // ************************************************************************
@@ -300,9 +320,17 @@ public class Shift extends AbstractPersistable {
 		this.type = type;
 	}
 
+	public Set<Skill> getRequiredSkillSet2() {
+		return requiredSkillSet2;
+	}
+
+	public void setRequiredSkillSet2(Set<Skill> requiredSkillSet2) {
+		this.requiredSkillSet2 = requiredSkillSet2;
+	}
+
 	public Shift inTimeZone(ZoneId zoneId) {
         Shift out = new Shift(zoneId, new ShiftView(zoneId, this), getSpot(), 
-        		getRotationEmployee(), getRequiredSkillSet(), getOriginalEmployee(), 
+        		getRotationEmployee(), getRequiredSkillSet(), getRequiredSkillSet2(), getOriginalEmployee(), 
         		getRotationVehicle(), getOriginalVehicle(), getType());
         out.setEmployee(getEmployee());
         out.setVehicle(getVehicle());

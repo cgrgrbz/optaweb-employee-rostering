@@ -59,6 +59,7 @@ export const getShiftListForSpot = (state: AppState, spot: Spot): Shift[] => {
         'originalEmployeeId', 'requiredSkillSetIdList'),
       spot,
       requiredSkillSet: (sv.requiredSkillSetIdList.map(id => skillSelectors.getSkillById(state, id))),
+      requiredSkillSet2: (sv.requiredSkillSet2IdList.map(id => skillSelectors.getSkillById(state, id))),
       originalEmployee: (sv.originalEmployeeId !== null)
         ? employeeSelectors.getEmployeeById(state, sv.originalEmployeeId) : null,
       rotationEmployee: (sv.rotationEmployeeId !== null)
@@ -91,6 +92,7 @@ export const getShiftListForEmployee = (state: AppState, employee: Employee): Sh
         'originalEmployeeId', 'requiredSkillSetIdList'),
       spot: spotSelectors.getSpotById(state, sv.spotId),
       requiredSkillSet: (sv.requiredSkillSetIdList.map(id => skillSelectors.getSkillById(state, id))),
+      requiredSkillSet2: (sv.requiredSkillSet2IdList.map(id => skillSelectors.getSkillById(state, id))),
       originalEmployee: (sv.originalEmployeeId !== null)
         ? employeeSelectors.getEmployeeById(state, sv.originalEmployeeId) : null,
       employee,

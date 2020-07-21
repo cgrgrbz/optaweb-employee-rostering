@@ -22,9 +22,10 @@ import DomainObjectView from 'domain/DomainObjectView';
 export function shiftTemplateToShiftTemplateView(shiftTemplate: ShiftTemplate): ShiftTemplateView {
   return {
     ...objectWithout(shiftTemplate, 'spot', 'rotationEmployee', 'shiftTemplateDuration',
-      'durationBetweenRotationStartAndTemplateStart', 'requiredSkillSet'),
+      'durationBetweenRotationStartAndTemplateStart', 'requiredSkillSet', 'requiredSkillSet2'),
     spotId: shiftTemplate.spot.id as number,
     requiredSkillSetIdList: shiftTemplate.requiredSkillSet.map(skill => skill.id as number),
+    requiredSkillSet2IdList: shiftTemplate.requiredSkillSet2.map(skill => skill.id as number),
     rotationEmployeeId: shiftTemplate.rotationEmployee ? shiftTemplate.rotationEmployee.id as number : null,
     shiftTemplateDuration: shiftTemplate.shiftTemplateDuration.toISOString(),
     durationBetweenRotationStartAndTemplateStart:
@@ -35,9 +36,10 @@ export function shiftTemplateToShiftTemplateView(shiftTemplate: ShiftTemplate): 
 export function shiftTemplateViewToDomainObjectView(view: ShiftTemplateView): DomainObjectView<ShiftTemplate> {
   return {
     ...objectWithout(view, 'spotId', 'rotationEmployeeId', 'shiftTemplateDuration',
-      'durationBetweenRotationStartAndTemplateStart', 'requiredSkillSetIdList'),
+      'durationBetweenRotationStartAndTemplateStart', 'requiredSkillSetIdList', 'requiredSkillSet2IdList'),
     spot: view.spotId,
     requiredSkillSet: view.requiredSkillSetIdList,
+    requiredSkillSet2: view.requiredSkillSet2IdList,
     rotationEmployee: view.rotationEmployeeId,
     shiftTemplateDuration: moment.duration(view.shiftTemplateDuration),
     durationBetweenRotationStartAndTemplateStart: moment.duration(view.durationBetweenRotationStartAndTemplateStart),
@@ -47,6 +49,7 @@ export function shiftTemplateViewToDomainObjectView(view: ShiftTemplateView): Do
 export interface ShiftTemplateView extends DomainObject {
   spotId: number;
   requiredSkillSetIdList: number[];
+  requiredSkillSet2IdList: number[];
   rotationEmployeeId: number | null;
   shiftTemplateDuration: string;
   durationBetweenRotationStartAndTemplateStart: string;

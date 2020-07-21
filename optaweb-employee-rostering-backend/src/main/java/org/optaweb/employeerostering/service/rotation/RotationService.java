@@ -89,6 +89,11 @@ public class RotationService extends AbstractRestService {
                 .collect(Collectors.toCollection(HashSet::new));
     }
     
+    private Set<Skill> getRequiredSkillSet2(Integer tenantId, ShiftTemplateView shiftTemplateView) {
+        return shiftTemplateView.getRequiredSkillSet2IdList()
+                .stream().map(id -> skillService.getSkill(tenantId, id))
+                .collect(Collectors.toCollection(HashSet::new));
+    }
 
     @Transactional
     public ShiftTemplateView getShiftTemplate(Integer tenantId, Long id) {
@@ -107,6 +112,7 @@ public class RotationService extends AbstractRestService {
         Spot spot = spotService.getSpot(tenantId, shiftTemplateView.getSpotId());
         Employee employee;
         Set<Skill> requiredSkillSet = getRequiredSkillSet(tenantId, shiftTemplateView);
+        Set<Skill> requiredSkillSet2 = getRequiredSkillSet2(tenantId, shiftTemplateView);
 
         Vehicle vehicle;
         
@@ -125,7 +131,7 @@ public class RotationService extends AbstractRestService {
         ShiftType type = shiftTemplateView.getType();
         
         ShiftTemplate shiftTemplate = new ShiftTemplate(rosterState.getRotationLength(), shiftTemplateView, spot,
-                                                        employee, requiredSkillSet, vehicle, type);
+                                                        employee, requiredSkillSet, requiredSkillSet2, vehicle, type);
         validateTenantIdParameter(tenantId, shiftTemplate);
         shiftTemplateRepository.save(shiftTemplate);
         return new ShiftTemplateView(rosterState.getRotationLength(), shiftTemplate);
@@ -137,6 +143,7 @@ public class RotationService extends AbstractRestService {
         Spot spot = spotService.getSpot(tenantId, shiftTemplateView.getSpotId());
         Employee employee;
         Set<Skill> requiredSkillSet = getRequiredSkillSet(tenantId, shiftTemplateView);
+        Set<Skill> requiredSkillSet2 = getRequiredSkillSet2(tenantId, shiftTemplateView);
 
         Vehicle vehicle;
         
@@ -155,7 +162,7 @@ public class RotationService extends AbstractRestService {
         ShiftType type = shiftTemplateView.getType();
 
         ShiftTemplate newShiftTemplate = new ShiftTemplate(rosterState.getRotationLength(), shiftTemplateView, spot,
-                                                           employee, requiredSkillSet, vehicle, type);
+                                                           employee, requiredSkillSet, requiredSkillSet2, vehicle, type);
         validateTenantIdParameter(tenantId, newShiftTemplate);
 
         ShiftTemplate oldShiftTemplate = shiftTemplateRepository
@@ -174,6 +181,9 @@ public class RotationService extends AbstractRestService {
         oldShiftTemplate.setEndDayOffset(newShiftTemplate.getEndDayOffset());
         oldShiftTemplate.setStartTime(newShiftTemplate.getStartTime());
         oldShiftTemplate.setEndTime(newShiftTemplate.getEndTime());
+        
+        oldShiftTemplate.setRequiredSkillSet(newShiftTemplate.getRequiredSkillSet());
+        oldShiftTemplate.setRequiredSkillSet2(newShiftTemplate.getRequiredSkillSet2());
 
         // Flush to increase version number before we duplicate it to ShiftTemplateView
         ShiftTemplate updatedShiftTemplate = shiftTemplateRepository.saveAndFlush(oldShiftTemplate);

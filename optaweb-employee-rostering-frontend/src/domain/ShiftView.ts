@@ -38,6 +38,7 @@ export const shiftToShiftView = (shift: Shift): ShiftView => ({
   endDateTime: shift.endDateTime,
   spotId: shift.spot.id as number,
   requiredSkillSetIdList: shift.requiredSkillSet.map(skill => skill.id as number),
+  requiredSkillSet2IdList: shift.requiredSkillSet2.map(skill => skill.id as number),
   employeeId: shift.employee ? shift.employee.id as number : null,
   originalEmployeeId: shift.originalEmployee ? shift.originalEmployee.id as number : null,
   rotationEmployeeId: shift.rotationEmployee ? shift.rotationEmployee.id as number : null,
@@ -50,6 +51,7 @@ export const shiftViewToDomainObjectView = (view: ShiftView): DomainObjectView<S
   spot: view.spotId,
   rotationEmployee: view.rotationEmployeeId,
   requiredSkillSet: view.requiredSkillSetIdList,
+  requiredSkillSet2: view.requiredSkillSet2IdList,
   originalEmployee: view.originalEmployeeId,
 });
 
@@ -58,6 +60,7 @@ export interface ShiftView extends DomainObject {
   endDateTime: Date;
   spotId: number;
   requiredSkillSetIdList: number[];
+  requiredSkillSet2IdList: number[];
   rotationEmployeeId: number | null;
   employeeId: number | null;
   originalEmployeeId: number | null;
