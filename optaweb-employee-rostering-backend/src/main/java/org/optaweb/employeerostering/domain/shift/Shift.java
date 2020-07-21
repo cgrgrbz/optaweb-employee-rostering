@@ -19,6 +19,7 @@ package org.optaweb.employeerostering.domain.shift;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -207,7 +208,11 @@ public class Shift extends AbstractPersistable {
     
     //TODO check if the vehicle has at least one of OR skills??
     public boolean hasSomeVehicleSkills() {
-    	return vehicle.getSkillProficiencySet().containsAll(requiredSkillSet);
+    	//let's say requiredSkillSet2 has 2 skills in it: A and B
+    	//what we are checking is the Vehicle has A OR B (or maybe A and B?)
+    	//so, if two list contains common skills, disjoint return false, and we check for opposite
+    	//if disjoint false, it means has common skills, and it's a acceptable Vehicle for the shift.
+    	return !Collections.disjoint(requiredSkillSet2, vehicle.getSkillProficiencySet());
     }
     
     // ************************************************************************
