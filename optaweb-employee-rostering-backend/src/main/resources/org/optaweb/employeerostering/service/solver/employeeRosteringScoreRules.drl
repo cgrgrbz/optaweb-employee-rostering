@@ -29,6 +29,10 @@ import org.optaplanner.core.api.score.buildin.hardmediumsoftlong.HardMediumSoftL
 import org.optaweb.employeerostering.domain.employee.Employee;
 import org.optaweb.employeerostering.domain.employee.EmployeeAvailability;
 import org.optaweb.employeerostering.domain.employee.EmployeeAvailabilityState;
+
+import org.optaweb.employeerostering.domain.vehicle.VehicleAvailability;
+import org.optaweb.employeerostering.domain.vehicle.VehicleAvailabilityState;
+
 import org.optaweb.employeerostering.domain.shift.Shift;
 import org.optaweb.employeerostering.domain.skill.Skill;
 import org.optaweb.employeerostering.domain.roster.Roster;
@@ -54,11 +58,31 @@ rule "Required vehicle skill for a shift"
     when
         $shift: Shift(vehicle != null, hasRequiredVehicleSkills() == false)
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -50);
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
 end
 
+rule "Required spot skill for a vehicle"
+    when
+        $s : Shift(
+                vehicle != null,
+                !getVehicle().hasSkills(getSpot().getRequiredSkillSet()))
+    			
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -100);
+end
 
-
+rule "Unavailable time slot for an vehicle"
+    when
+        $availability: VehicleAvailability(
+                $v : vehicle,
+                $startDateTime : startDateTime,
+                $endDateTime : endDateTime)
+        Shift(vehicle == $v,
+            $startDateTime < endDateTime,
+            $endDateTime > startDateTime)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -50);
+end
 // ############################################################################
 // Hard constraints
 // ############################################################################
