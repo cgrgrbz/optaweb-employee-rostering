@@ -206,7 +206,8 @@ public class Shift extends AbstractPersistable {
     	return vehicle.getSkillProficiencySet().containsAll(requiredSkillSet);
     }
     
-    //TODO check if the vehicle has at least one of OR skills??
+    //TODO control it. Is it working?
+    //check if the vehicle has at least one of OR skills??
     public boolean hasSomeVehicleSkills() {
     	//let's say requiredSkillSet2 has 2 skills in it: A and B
     	//what we are checking is the Vehicle has A OR B (or maybe A and B?)
