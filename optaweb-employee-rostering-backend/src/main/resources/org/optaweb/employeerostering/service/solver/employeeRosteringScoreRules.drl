@@ -54,14 +54,21 @@ rule "Assign vehicle for every shift"
         scoreHolder.addMediumConstraintMatch(kcontext, -1);
 end
 
-rule "Required vehicle skill for a shift"
+rule "Required vehicle skill(s) for a shift"
     when
         $shift: Shift(vehicle != null, hasRequiredVehicleSkills() == false)
     then
         scoreHolder.addHardConstraintMatch(kcontext, -1);
 end
 
-rule "Required spot skill for a vehicle"
+rule "Optional required vehicle skill(s) for a shift"
+    when
+        $shift: Shift(vehicle != null, hasSomeVehicleSkills() == false)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "Required spot skill(s) for a vehicle"
     when
         $s : Shift(
                 vehicle != null,

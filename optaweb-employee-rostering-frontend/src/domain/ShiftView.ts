@@ -46,7 +46,7 @@ export const shiftToShiftView = (shift: Shift): ShiftView => ({
 });
 
 export const shiftViewToDomainObjectView = (view: ShiftView): DomainObjectView<Shift> => ({
-  ...objectWithout(view, 'employeeId', 'spotId', 'rotationEmployeeId', 'requiredSkillSetIdList', 'originalEmployeeId'),
+  ...objectWithout(view, 'employeeId', 'spotId', 'rotationEmployeeId', 'requiredSkillSetIdList', 'requiredSkillSet2IdList', 'originalEmployeeId'),
   employee: view.employeeId,
   spot: view.spotId,
   rotationEmployee: view.rotationEmployeeId,

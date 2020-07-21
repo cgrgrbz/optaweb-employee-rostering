@@ -82,6 +82,7 @@ export class EditShiftModal extends React.Component<Props & WithTranslation, Sta
           employee: null,
           originalEmployee: null,
           requiredSkillSet: [],
+          requiredSkillSet2: [],
           rotationEmployee: null,
           pinnedByUser: false,
         },
@@ -98,6 +99,7 @@ export class EditShiftModal extends React.Component<Props & WithTranslation, Sta
           employee: null,
           originalEmployee: null,
           requiredSkillSet: [],
+          requiredSkillSet2: [],
           rotationEmployee: null,
           pinnedByUser: false,
         } });
@@ -202,6 +204,19 @@ export class EditShiftModal extends React.Component<Props & WithTranslation, Sta
               optionToStringMap={skill => skill.name}
               onChange={requiredSkillSet => this.setState(prevState => ({
                 editedValue: { ...prevState.editedValue, requiredSkillSet },
+              }))}
+            />
+          </InputGroup>
+          <InputGroup>
+            <Label>{t('addtionalSkills2')}</Label>
+            <MultiTypeaheadSelectInput
+              aria-label="Additional Skills2"
+              emptyText={t('selectAdditionalSkills2')}
+              value={this.state.editedValue.requiredSkillSet2 ? this.state.editedValue.requiredSkillSet2 : []}
+              options={this.props.skillList}
+              optionToStringMap={skill => skill.name}
+              onChange={requiredSkillSet2 => this.setState(prevState => ({
+                editedValue: { ...prevState.editedValue, requiredSkillSet2 },
               }))}
             />
           </InputGroup>
