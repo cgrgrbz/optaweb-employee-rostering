@@ -213,7 +213,12 @@ public class Shift extends AbstractPersistable {
     	//what we are checking is the Vehicle has A OR B (or maybe A and B?)
     	//so, if two list contains common skills, disjoint return false, and we check for opposite
     	//if disjoint false, it means has common skills, and it's a acceptable Vehicle for the shift.
-    	return !Collections.disjoint(requiredSkillSet2, vehicle.getSkillProficiencySet());
+    	if(requiredSkillSet2.size() > 0) {
+    		return !Collections.disjoint(requiredSkillSet2, vehicle.getSkillProficiencySet());
+    	}
+    	else {
+    		return true;
+    	}
     }
     
     // ************************************************************************
