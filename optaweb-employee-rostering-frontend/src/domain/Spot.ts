@@ -19,5 +19,9 @@ import { Skill } from './Skill';
 
 export interface Spot extends DomainObject {
   name: string;
+  nameDetail: string;
+  code: string;
+  description: string;
+  length: number;
   requiredSkillSet: Skill[];
 }

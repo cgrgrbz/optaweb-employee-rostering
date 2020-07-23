@@ -38,8 +38,8 @@ interface StateProps extends DataTableProps<Spot> {
 
 const mapStateToProps = (state: AppState, ownProps: Props): StateProps => ({
   ...ownProps,
-  title: ownProps.t('spots'),
-  columnTitles: [ownProps.t('name'), ownProps.t('requiredSkillSet')],
+  title: ownProps.t('spots'),      
+  columnTitles: [ownProps.t('code'), ownProps.t('name'), ownProps.t('nameDetail'), ownProps.t('description'), ownProps.t('length'), ownProps.t('requiredSkillSet')],
   tableData: spotSelectors.getSpotList(state),
   skillList: skillSelectors.getSkillList(state),
   tenantId: state.tenantData.currentTenantId,
@@ -72,8 +72,9 @@ export class SpotsPage extends DataTable<Spot, Props> {
 
   displayDataRow(data: Spot): JSX.Element[] {
     return [
+      <Text key={0}>{data.code}</Text>,
       <span style={{ display: 'grid', gridTemplateColumns: 'max-content min-content' }}>
-        <Text key={0}>{data.name}</Text>
+        <Text key={1}>{data.name}</Text>
         <Button
           variant={ButtonVariant.link}
           onClick={() => {
@@ -83,7 +84,10 @@ export class SpotsPage extends DataTable<Spot, Props> {
           <ArrowIcon />
         </Button>
       </span>,
-      <ChipGroup key={1}>
+      <Text key={2}>{data.nameDetail}</Text>,
+      <Text key={3}>{data.description}</Text>,
+      <Text key={4}>{data.length}</Text>,
+      <ChipGroup key={5}>
         {data.requiredSkillSet.map(skill => (
           <Chip key={skill.name} isReadOnly>
             {skill.name}
@@ -103,13 +107,41 @@ export class SpotsPage extends DataTable<Spot, Props> {
     return [
       <TextInput
         key={0}
+        name="code"
+        defaultValue={data.code}
+        aria-label="code"
+        onChange={value => setProperty('code', value)}
+      />,
+      <TextInput
+        key={1}
         name="name"
         defaultValue={data.name}
         aria-label="Name"
         onChange={value => setProperty('name', value)}
       />,
+      <TextInput
+        key={2}
+        name="nameDetail"
+        defaultValue={data.nameDetail}
+        aria-label="Name Detail"
+        onChange={value => setProperty('nameDetail', value)}
+      />,
+      <TextInput
+        key={3}
+        name="description"
+        defaultValue={data.description}
+        aria-label="description"
+        onChange={value => setProperty('description', value)}
+      />,
+      <TextInput
+        key={4}
+        name="length"
+        defaultValue={data.length}
+        aria-label="length"
+        onChange={value => setProperty('length', value)}
+      />,
       <StatefulMultiTypeaheadSelectInput
-        key={1}
+        key={5}
         emptyText={this.props.t('selectRequiredSkills')}
         options={this.props.skillList}
         optionToStringMap={skill => skill.name}
@@ -120,8 +152,7 @@ export class SpotsPage extends DataTable<Spot, Props> {
   }
 
   isDataComplete(editedValue: ReadonlyPartial<Spot>): editedValue is Spot {
-    return editedValue.name !== undefined
-      && editedValue.requiredSkillSet !== undefined;
+    return editedValue.name !== undefined && editedValue.requiredSkillSet !== undefined && editedValue.code !== undefined && editedValue.nameDetail !== undefined && editedValue.description !== undefined && editedValue.length !== undefined;
   }
 
   isValid(editedValue: Spot): boolean {
@@ -130,7 +161,9 @@ export class SpotsPage extends DataTable<Spot, Props> {
 
   getFilter(): (filter: string) => Predicate<Spot> {
     return stringFilter(spot => spot.name,
-      spot => spot.requiredSkillSet.map(skill => skill.name));
+      spot => spot.requiredSkillSet.map(skill => skill.name),
+      spot => spot.code,
+      spot => spot.description);
   }
 
   getSorters(): (Sorter<Spot> | null)[] {
