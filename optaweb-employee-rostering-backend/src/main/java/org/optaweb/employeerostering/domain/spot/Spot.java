@@ -33,53 +33,44 @@ import org.optaweb.employeerostering.domain.common.AbstractPersistable;
 import org.optaweb.employeerostering.domain.skill.Skill;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"tenantId", "name"}),
-        @UniqueConstraint(columnNames = {"id"})})
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "tenantId", "code" }),
+		@UniqueConstraint(columnNames = { "id" }) })
 public class Spot extends AbstractPersistable {
 
-    @NotNull
-    @Size(min = 1, max = 120)
-    @Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "Name should not contain any leading or trailing whitespaces")
-    private String name;
-    
-    @NotNull
-    @Size(min = 1, max = 120)
-    @Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "Name should not contain any leading or trailing whitespaces")
-    private String nameDetail;
-    
-    // this is going to be UNIQUE for each spot!
-    @NotNull
-    @Size(min = 1, max = 20)
-    @Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "Name should not contain any leading or trailing whitespaces")
-    private String code;
-    
-    @NotNull
-    @Size(min = 1, max = 20)
-    @Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "Name should not contain any leading or trailing whitespaces")
-    private String description;
+	@NotNull
+	@Size(min = 1, max = 150)
+	@Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "Name should not contain any leading or trailing whitespaces")
+	private String name;
 
-    @NotNull
-    private Float length;
-    
-    @NotNull
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "SpotRequiredSkillSet",
-            joinColumns = @JoinColumn(name = "spotId", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "skillId", referencedColumnName = "id")
-    )
-    private Set<Skill> requiredSkillSet;
+	@NotNull
+	@Size(min = 1, max = 150)
+	@Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "nameDetail should not contain any leading or trailing whitespaces")
+	private String nameDetail;
 
-    @SuppressWarnings("unused")
-    public Spot() {
-    }
+	// this is going to be UNIQUE for each spot!
+	@NotNull
+	@Size(min = 1, max = 20)
+	@Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "code should not contain any leading or trailing whitespaces")
+	private String code;
 
-    public Spot(
-    		Integer tenantId,
-			String name,
-			String nameDetail,
-			String code,
-			String description,
-			Float length,
+	@NotNull
+	@Size(min = 1, max = 200)
+	@Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "description should not contain any leading or trailing whitespaces")
+	private String description;
+
+	@NotNull
+	private Double length;
+
+	@NotNull
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "SpotRequiredSkillSet", joinColumns = @JoinColumn(name = "spotId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "skillId", referencedColumnName = "id"))
+	private Set<Skill> requiredSkillSet;
+
+	@SuppressWarnings("unused")
+	public Spot() {
+	}
+
+	public Spot(Integer tenantId, String name, String nameDetail, String code, String description, Double length,
 			Set<Skill> requiredSkillSet) {
 		super(tenantId);
 		this.name = name;
@@ -90,30 +81,30 @@ public class Spot extends AbstractPersistable {
 		this.requiredSkillSet = requiredSkillSet;
 	}
 
-    @Override
-    public String toString() {
-        return name;
-    }
+	@Override
+	public String toString() {
+		return name;
+	}
 
 	// ************************************************************************
-    // Simple getters and setters
-    // ************************************************************************
+	// Simple getters and setters
+	// ************************************************************************
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Set<Skill> getRequiredSkillSet() {
-        return requiredSkillSet;
-    }
+	public Set<Skill> getRequiredSkillSet() {
+		return requiredSkillSet;
+	}
 
-    public void setRequiredSkillSet(Set<Skill> requiredSkillSet) {
-        this.requiredSkillSet = requiredSkillSet;
-    }
+	public void setRequiredSkillSet(Set<Skill> requiredSkillSet) {
+		this.requiredSkillSet = requiredSkillSet;
+	}
 
 	public String getNameDetail() {
 		return nameDetail;
@@ -139,11 +130,11 @@ public class Spot extends AbstractPersistable {
 		this.description = description;
 	}
 
-	public Float getLength() {
+	public Double getLength() {
 		return length;
 	}
 
-	public void setLength(Float length) {
+	public void setLength(Double length) {
 		this.length = length;
 	}
 }

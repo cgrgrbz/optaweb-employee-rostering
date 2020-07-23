@@ -130,7 +130,7 @@ export class ShiftRosterPage extends React.Component<Props, State> {
 
   onUpdateShiftRoster(urlProps: ShiftRosterUrlProps) {
     if (this.props.rosterState) {
-      const spot = this.props.allSpotList.find(s => s.name === urlProps.spot) || this.props.allSpotList[0];
+      const spot = this.props.allSpotList.find(s => s.code === urlProps.spot) || this.props.allSpotList[0];
       const startDate = moment(urlProps.week || new Date()).startOf('week').toDate();
       const endDate = moment(startDate).endOf('week').toDate();
 
@@ -141,7 +141,7 @@ export class ShiftRosterPage extends React.Component<Props, State> {
           spotList: [spot],
         });
         this.setState({ firstLoad: false });
-        setPropsInUrl(this.props, { ...urlProps, spot: spot.name });
+        setPropsInUrl(this.props, { ...urlProps, spot: spot.code });
       }
     }
   }
@@ -307,13 +307,13 @@ export class ShiftRosterPage extends React.Component<Props, State> {
           <TypeaheadSelectInput
             aria-label="Select Spot"
             emptyText={t('selectSpot')}
-            optionToStringMap={spot => spot.name}
+            optionToStringMap={spot => spot.code + " - " + spot.name}
             options={this.props.allSpotList}
             value={shownSpot}
             onChange={(s) => {
               this.onUpdateShiftRoster({
                 ...urlProps,
-                spot: s ? s.name : null,
+                spot: s ? s.code : null,
               });
             }}
             noClearButton

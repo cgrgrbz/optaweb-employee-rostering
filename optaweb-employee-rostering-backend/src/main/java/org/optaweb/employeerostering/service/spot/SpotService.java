@@ -16,16 +16,20 @@
 
 package org.optaweb.employeerostering.service.spot;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.optaweb.employeerostering.domain.skill.Skill;
 import org.optaweb.employeerostering.domain.spot.Spot;
 import org.optaweb.employeerostering.domain.spot.view.SpotView;
 import org.optaweb.employeerostering.service.common.AbstractRestService;
+import org.optaweb.employeerostering.util.SpotListXlsxFileIO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +39,11 @@ public class SpotService extends AbstractRestService {
 
     private final SpotRepository spotRepository;
 
-    public SpotService(SpotRepository spotRepository) {
+    private final SpotListXlsxFileIO spotListXlsxFileIO;
+
+    public SpotService(SpotRepository spotRepository, SpotListXlsxFileIO spotListXlsxFileIO) {
         this.spotRepository = spotRepository;
+        this.spotListXlsxFileIO = spotListXlsxFileIO;
     }
 	
     public Spot convertFromView(Integer tenantId, SpotView spotView) {
@@ -53,7 +60,34 @@ public class SpotService extends AbstractRestService {
         spot.setVersion(spotView.getVersion());
         return spot;
     }
+    
+    @Transactional
+    public List<Spot> importSpotsFromExcel(Integer tenantId, InputStream excelInputStream) throws IOException {
+        List<SpotView> excelSpotList = spotListXlsxFileIO.getSpotListFromExcelFile(tenantId, excelInputStream);
 
+        final Set<String> addedSpotSet = new HashSet<>();
+        excelSpotList.stream().flatMap(spot -> {
+            if (addedSpotSet.contains(spot.getCode().toLowerCase())) {
+                // Duplicate Spot; already in the stream
+                return Stream.empty();
+            }
+            // Add spot to the stream
+            addedSpotSet.add(spot.getCode().toLowerCase());
+            return Stream.of(spot);
+        }).forEach(spot -> {
+            Spot oldSpot = spotRepository.findSpotByCode(tenantId, spot.getCode());
+            if (oldSpot != null) {
+                spot.setId(oldSpot.getId());
+                spot.setVersion(oldSpot.getVersion());
+                updateSpot(tenantId, spot);
+            } else {
+                createSpot(tenantId, spot);
+            }
+        });
+
+        return getSpotList(tenantId);
+    }
+    
     @Transactional
     public List<Spot> getSpotList(Integer tenantId) {
         return spotRepository.findAllByTenantId(tenantId, PageRequest.of(0, Integer.MAX_VALUE));

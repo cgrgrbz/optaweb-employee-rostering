@@ -35,7 +35,6 @@ import org.optaweb.employeerostering.domain.vehicle.Vehicle;
 import org.optaweb.employeerostering.service.common.AbstractRestService;
 import org.optaweb.employeerostering.service.employee.EmployeeService;
 import org.optaweb.employeerostering.service.roster.RosterService;
-import org.optaweb.employeerostering.service.shift.ShiftService;
 import org.optaweb.employeerostering.service.skill.SkillService;
 import org.optaweb.employeerostering.service.spot.SpotService;
 import org.optaweb.employeerostering.service.vehicle.VehicleService;

@@ -37,4 +37,8 @@ public interface SpotRepository extends JpaRepository<Spot, Long> {
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("delete from Spot s where s.tenantId = :tenantId")
     void deleteForTenant(@Param("tenantId") Integer tenantId);
+      	
+    @Query("select s from Spot s " +
+            "where s.tenantId = :tenantId and s.code = :code")
+    Spot findSpotByCode(@Param("tenantId") Integer tenantId, @Param("code") String code);
 }

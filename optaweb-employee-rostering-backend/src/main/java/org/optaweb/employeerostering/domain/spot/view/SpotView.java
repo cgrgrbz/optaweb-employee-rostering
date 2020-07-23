@@ -18,8 +18,6 @@ package org.optaweb.employeerostering.domain.spot.view;
 
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.optaweb.employeerostering.domain.common.AbstractPersistable;
 import org.optaweb.employeerostering.domain.skill.Skill;
 
@@ -33,7 +31,7 @@ public class SpotView extends AbstractPersistable {
     
     private String description;
 
-    private Float length;
+    private Double length;
     
     private Set<Skill> requiredSkillSet;
 
@@ -47,7 +45,7 @@ public class SpotView extends AbstractPersistable {
 			String nameDetail,
 			String code,
 			String description,
-			Float length,
+			Double length,
 			Set<Skill> requiredSkillSet) {
 		super(tenantId);
 		this.name = name;
@@ -107,11 +105,11 @@ public class SpotView extends AbstractPersistable {
 		this.description = description;
 	}
 
-	public Float getLength() {
+	public Double getLength() {
 		return length;
 	}
 
-	public void setLength(Float length) {
+	public void setLength(Double length) {
 		this.length = length;
 	}
 }

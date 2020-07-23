@@ -154,7 +154,8 @@ export class EditShiftModal extends React.Component<Props & WithTranslation, Sta
             <Button aria-label="Save" key={2} onClick={this.onSave}>{t('save')}</Button>,
           ])
         }
-        isSmall
+        isLarge 
+
       >
         <Form id="modal-element" key={this.state.resetCount} onSubmit={e => e.preventDefault()}>
           <InputGroup>
@@ -188,7 +189,7 @@ export class EditShiftModal extends React.Component<Props & WithTranslation, Sta
               emptyText={t('selectSpot')}
               value={this.state.editedValue.spot}
               options={this.props.spotList}
-              optionToStringMap={spot => spot.name}
+              optionToStringMap={spot => spot.code}
               onChange={spot => this.setState(prevState => ({
                 editedValue: { ...prevState.editedValue, spot },
               }))}
@@ -258,6 +259,7 @@ export class EditShiftModal extends React.Component<Props & WithTranslation, Sta
                 editedValue: { ...prevState.editedValue, rotationEmployee: (employee !== undefined) ? employee : null },
               }))}
               optional
+              autoSize={true}
             />
           </InputGroup>
           <InputGroup>

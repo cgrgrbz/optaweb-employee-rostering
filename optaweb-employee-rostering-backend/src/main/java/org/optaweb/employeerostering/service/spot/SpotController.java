@@ -16,6 +16,7 @@
 
 package org.optaweb.employeerostering.service.spot;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -36,7 +37,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/rest/tenant/{tenantId}/spot")
@@ -82,5 +85,11 @@ public class SpotController {
     public ResponseEntity<Spot> updateSpot(@PathVariable @Min(0) Integer tenantId,
                                            @RequestBody @Valid SpotView spotView) {
         return new ResponseEntity<>(spotService.updateSpot(tenantId, spotView), HttpStatus.OK);
+    }
+    
+    @ApiOperation("Import spots from an Excel file")
+    @PostMapping("/import")
+    public ResponseEntity<List<Spot>> addSpotsFromExcelFile(@PathVariable @Min(0) Integer tenantId, @RequestParam("file") MultipartFile excelDataFile) throws IOException {
+        return new ResponseEntity<>(spotService.importSpotsFromExcel(tenantId, excelDataFile.getInputStream()),HttpStatus.OK);
     }
 }

@@ -29,11 +29,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.optaweb.employeerostering.domain.contract.Contract;
 import org.optaweb.employeerostering.domain.skill.Skill;
 import org.optaweb.employeerostering.domain.skill.view.SkillView;
 import org.optaweb.employeerostering.domain.vehicle.view.VehicleView;
-import org.optaweb.employeerostering.service.contract.ContractService;
 import org.optaweb.employeerostering.service.skill.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,12 +41,9 @@ public class VehicleListXlsxFileIO {
 
     private final SkillService skillService;
 
-    private final ContractService contractService;
-    
     @Autowired
-    public VehicleListXlsxFileIO(SkillService skillService, ContractService contractService) {
+    public VehicleListXlsxFileIO(SkillService skillService) {
         this.skillService = skillService;
-        this.contractService = contractService;
     }
 
     public List<VehicleView> getVehicleListFromExcelFile(Integer tenantId,

@@ -211,13 +211,13 @@ export class EditShiftTemplateModal extends React.Component<Props & WithTranslat
               emptyText={t('selectSpot')}
               value={this.state.editedValue.spot}
               options={this.props.spotList}
-              optionToStringMap={spot => spot.name}
+              optionToStringMap={spot => spot.code}
               onChange={spot => this.setState(prevState => ({
                 editedValue: { ...prevState.editedValue, spot },
               }))}
             />
           </InputGroup>
-          <InputGroup>
+          <InputGroup style={{width:'450px'}} >
             <Label>{t('startDayOffset')}</Label>
             <TextInput
               aria-label="Start Day Offset"
@@ -258,7 +258,7 @@ export class EditShiftTemplateModal extends React.Component<Props & WithTranslat
               }}
             />
           </InputGroup>
-          <InputGroup>
+          <InputGroup style={{width:'450px'}}>
             <Label>{t('endDayOffset')}</Label>
             <TextInput
               aria-label="End Day Offset"
@@ -299,7 +299,7 @@ export class EditShiftTemplateModal extends React.Component<Props & WithTranslat
               }}
             />
           </InputGroup>
-          <InputGroup>
+          <InputGroup style={{width:'450px'}}>
             <Label>{t('rotationEmployee')}</Label>
             <TypeaheadSelectInput
               aria-label="Employee"
@@ -313,7 +313,7 @@ export class EditShiftTemplateModal extends React.Component<Props & WithTranslat
               optional
             />
           </InputGroup>
-          <InputGroup>
+          <InputGroup style={{width:'450px'}}>
             <Label>{t('addtionalSkills')}</Label>
             <MultiTypeaheadSelectInput
               aria-label="Additional Skills"
@@ -326,7 +326,7 @@ export class EditShiftTemplateModal extends React.Component<Props & WithTranslat
               }))}
             />
           </InputGroup>
-          <InputGroup>
+          <InputGroup style={{width:'450px'}}>
             <Label>{t('addtionalSkills2')}</Label>
             <MultiTypeaheadSelectInput
               aria-label="Additional Skills2"

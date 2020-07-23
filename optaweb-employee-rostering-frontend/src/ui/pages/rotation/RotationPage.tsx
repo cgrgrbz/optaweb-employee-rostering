@@ -187,7 +187,7 @@ export class RotationPage extends React.Component<Props & WithTranslation, State
   render() {
     const urlProps = getPropsFromUrl<RotationPageUrlProps>(this.props, {
       weekNumber: '0',
-      shownSpot: (this.props.spotList.length > 0) ? this.props.spotList[0].name : null,
+      shownSpot: (this.props.spotList.length > 0) ? this.props.spotList[0].code : null,
     });
     const baseDate = moment('2018-01-01T00:00').startOf('week').toDate();
     const { t } = this.props;
@@ -206,7 +206,7 @@ export class RotationPage extends React.Component<Props & WithTranslation, State
                 key={2}
                 aria-label="Spots Page"
                 variant="primary"
-                onClick={() => this.props.history.push(`/${this.props.tenantId}/wards`)}
+                onClick={() => this.props.history.push(`/${this.props.tenantId}/spots`)}
               />,
             ]}
           />
@@ -215,7 +215,7 @@ export class RotationPage extends React.Component<Props & WithTranslation, State
     }
 
     const weekNumber = parseInt(urlProps.weekNumber as string, 10);
-    const shownSpot = this.props.spotList.find(s => s.name === urlProps.shownSpot) as Spot;
+    const shownSpot = this.props.spotList.find(s => s.code === urlProps.shownSpot) as Spot;
 
     const startDate = moment(baseDate).add(weekNumber, 'weeks').toDate();
     const endDate = moment(startDate).add(1, 'week').toDate();
@@ -264,12 +264,12 @@ export class RotationPage extends React.Component<Props & WithTranslation, State
             <TypeaheadSelectInput
               aria-label="Select Spot"
               emptyText={t('selectSpot')}
-              optionToStringMap={spot => spot.name}
+              optionToStringMap={spot => spot.code + " - " + spot.name}
               options={this.props.spotList}
               value={shownSpot}
               onChange={(newSpot) => {
                 if (newSpot !== undefined) {
-                  setPropsInUrl(this.props, { shownSpot: newSpot.name });
+                  setPropsInUrl(this.props, { shownSpot: newSpot.code });
                 }
               }}
               noClearButton
@@ -334,6 +334,7 @@ export class RotationPage extends React.Component<Props & WithTranslation, State
               isCreatingOrEditingShiftTemplate: false,
             });
           }}
+          
         />
         <Schedule<{ shiftTemplate: ShiftTemplate; start: Date; end: Date }>
           key={shownSpot.id}

@@ -72,18 +72,18 @@ export class SpotsPage extends DataTable<Spot, Props> {
 
   displayDataRow(data: Spot): JSX.Element[] {
     return [
-      <Text key={0}>{data.code}</Text>,
       <span style={{ display: 'grid', gridTemplateColumns: 'max-content min-content' }}>
-        <Text key={1}>{data.name}</Text>
+        <Text key={1}>{data.code}</Text>
         <Button
           variant={ButtonVariant.link}
           onClick={() => {
-            this.props.history.push(`/${this.props.tenantId}/adjust?spot=${encodeURIComponent(data.name)}`);
+            this.props.history.push(`/${this.props.tenantId}/adjust?spot=${encodeURIComponent(data.code)}`);
           }}
         >
           <ArrowIcon />
         </Button>
       </span>,
+      <Text key={1}>{data.name}</Text>,
       <Text key={2}>{data.nameDetail}</Text>,
       <Text key={3}>{data.description}</Text>,
       <Text key={4}>{data.length}</Text>,
