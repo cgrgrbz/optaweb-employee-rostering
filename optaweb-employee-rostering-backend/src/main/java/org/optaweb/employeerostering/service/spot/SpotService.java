@@ -18,9 +18,11 @@ package org.optaweb.employeerostering.service.spot;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.optaweb.employeerostering.domain.skill.Skill;
 import org.optaweb.employeerostering.domain.spot.Spot;
 import org.optaweb.employeerostering.domain.spot.view.SpotView;
 import org.optaweb.employeerostering.service.common.AbstractRestService;
@@ -36,10 +38,17 @@ public class SpotService extends AbstractRestService {
     public SpotService(SpotRepository spotRepository) {
         this.spotRepository = spotRepository;
     }
-
+	
     public Spot convertFromView(Integer tenantId, SpotView spotView) {
         validateTenantIdParameter(tenantId, spotView);
-        Spot spot = new Spot(tenantId, spotView.getName(), spotView.getRequiredSkillSet());
+        Spot spot = new Spot(
+        		tenantId, 
+        		spotView.getName(), 
+        		spotView.getNameDetail(), 
+        		spotView.getCode(), 
+        		spotView.getDescription(), 
+        		spotView.getLength(), 
+        		spotView.getRequiredSkillSet() );
         spot.setId(spotView.getId());
         spot.setVersion(spotView.getVersion());
         return spot;
@@ -93,7 +102,12 @@ public class SpotService extends AbstractRestService {
         }
 
         oldSpot.setName(newSpot.getName());
+        oldSpot.setNameDetail(newSpot.getNameDetail());
+        oldSpot.setCode(newSpot.getCode());
+        oldSpot.setDescription(newSpot.getDescription());
+        oldSpot.setLength(newSpot.getLength());
         oldSpot.setRequiredSkillSet(newSpot.getRequiredSkillSet());
+        
         return spotRepository.save(oldSpot);
     }
 }

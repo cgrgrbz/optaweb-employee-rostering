@@ -31,7 +31,7 @@ public interface SpotRepository extends JpaRepository<Spot, Long> {
 
     @Query("select s from Spot s " +
             "where s.tenantId = :tenantId " +
-            "order by LOWER(s.name)")
+            "order by LOWER(s.code)")
     List<Spot> findAllByTenantId(@Param("tenantId") Integer tenantId, Pageable pageable);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)

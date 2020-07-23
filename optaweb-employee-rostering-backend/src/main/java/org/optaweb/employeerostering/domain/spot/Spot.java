@@ -41,7 +41,26 @@ public class Spot extends AbstractPersistable {
     @Size(min = 1, max = 120)
     @Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "Name should not contain any leading or trailing whitespaces")
     private String name;
+    
+    @NotNull
+    @Size(min = 1, max = 120)
+    @Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "Name should not contain any leading or trailing whitespaces")
+    private String nameDetail;
+    
+    // this is going to be UNIQUE for each spot!
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "Name should not contain any leading or trailing whitespaces")
+    private String code;
+    
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Pattern(regexp = "^(?!\\s).*(?<!\\s)$", message = "Name should not contain any leading or trailing whitespaces")
+    private String description;
 
+    @NotNull
+    private Float length;
+    
     @NotNull
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "SpotRequiredSkillSet",
@@ -54,18 +73,29 @@ public class Spot extends AbstractPersistable {
     public Spot() {
     }
 
-    public Spot(Integer tenantId, String name, Set<Skill> requiredSkillSet) {
-        super(tenantId);
-        this.name = name;
-        this.requiredSkillSet = requiredSkillSet;
-    }
+    public Spot(
+    		Integer tenantId,
+			String name,
+			String nameDetail,
+			String code,
+			String description,
+			Float length,
+			Set<Skill> requiredSkillSet) {
+		super(tenantId);
+		this.name = name;
+		this.nameDetail = nameDetail;
+		this.code = code;
+		this.description = description;
+		this.length = length;
+		this.requiredSkillSet = requiredSkillSet;
+	}
 
     @Override
     public String toString() {
         return name;
     }
 
-    // ************************************************************************
+	// ************************************************************************
     // Simple getters and setters
     // ************************************************************************
 
@@ -84,4 +114,36 @@ public class Spot extends AbstractPersistable {
     public void setRequiredSkillSet(Set<Skill> requiredSkillSet) {
         this.requiredSkillSet = requiredSkillSet;
     }
+
+	public String getNameDetail() {
+		return nameDetail;
+	}
+
+	public void setNameDetail(String nameDetail) {
+		this.nameDetail = nameDetail;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Float getLength() {
+		return length;
+	}
+
+	public void setLength(Float length) {
+		this.length = length;
+	}
 }
