@@ -33,11 +33,16 @@ import { objectWithout } from 'util/ImmutableCollectionOperations';
 import moment from 'moment';
 import { RosterState } from 'domain/RosterState';
 
+import { skillSelectors } from 'store/skill';
+import { Skill } from 'domain/Skill';
+import MultiTypeaheadSelectInput from 'ui/components/MultiTypeaheadSelectInput';
+
 export interface Props {
   tenantId: number;
   shiftTemplate?: ShiftTemplate;
   isOpen: boolean;
   spotList: Spot[];
+  skillList: Skill[];
   employeeList: Employee[];
   rotationLength: number | null;
   onSave: (availability: ShiftTemplate) => void;
@@ -54,6 +59,7 @@ const mapStateToProps = (state: AppState, ownProps: {
 }): Props => ({
   ...ownProps,
   tenantId: state.tenantData.currentTenantId,
+  skillList: skillSelectors.getSkillList(state),
   spotList: spotSelectors.getSpotList(state),
   rotationLength: state.rosterState.isLoading ? null : (state.rosterState.rosterState as RosterState).rotationLength,
   employeeList: employeeSelectors.getEmployeeList(state),
@@ -305,6 +311,32 @@ export class EditShiftTemplateModal extends React.Component<Props & WithTranslat
                 editedValue: { ...prevState.editedValue, rotationEmployee: employee || null },
               }))}
               optional
+            />
+          </InputGroup>
+          <InputGroup>
+            <Label>{t('addtionalSkills')}</Label>
+            <MultiTypeaheadSelectInput
+              aria-label="Additional Skills"
+              emptyText={t('selectAdditionalSkills')}
+              value={this.state.editedValue.requiredSkillSet ? this.state.editedValue.requiredSkillSet : []}
+              options={this.props.skillList}
+              optionToStringMap={skill => skill.name}
+              onChange={requiredSkillSet => this.setState(prevState => ({
+                editedValue: { ...prevState.editedValue, requiredSkillSet },
+              }))}
+            />
+          </InputGroup>
+          <InputGroup>
+            <Label>{t('addtionalSkills2')}</Label>
+            <MultiTypeaheadSelectInput
+              aria-label="Additional Skills2"
+              emptyText={t('selectAdditionalSkills2')}
+              value={this.state.editedValue.requiredSkillSet2 ? this.state.editedValue.requiredSkillSet2 : []}
+              options={this.props.skillList}
+              optionToStringMap={skill => skill.name}
+              onChange={requiredSkillSet2 => this.setState(prevState => ({
+                editedValue: { ...prevState.editedValue, requiredSkillSet2 },
+              }))}
             />
           </InputGroup>
         </Form>
