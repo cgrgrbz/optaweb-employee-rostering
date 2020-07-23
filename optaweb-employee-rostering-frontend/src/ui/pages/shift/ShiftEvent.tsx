@@ -391,16 +391,15 @@ const ShiftEvent: React.FC<EventProps<Shift>> = props => (
       }}
     >
       {props.event.pinnedByUser && <ThumbTackIcon />}
+      
       <span style={{
         writingMode: 'vertical-rl',
         transform: 'rotate(180deg)',
-      }}
-      >
-        {`${props.title} ${props.event.requiredSkillSet.length
-          ? `(${props.event.requiredSkillSet.map(s => s.name).join(', ')})` : ''} ${
-          (props.event.originalEmployee && props.event.employee
-            && props.event.originalEmployee.id !== props.event.employee.id)
-            ? `(was ${props.event.originalEmployee.name})` : ''}`}
+      }}>
+        {`${props.title} 
+          ${props.event.requiredSkillSet.length ? `(${props.event.requiredSkillSet.map(s => s.name).join(' AND ')})` : ''}           
+          ${props.event.requiredSkillSet2.length ? `(${props.event.requiredSkillSet2.map(s => s.name).join(' OR ')})` : ''}
+          ${(props.event.originalEmployee && props.event.employee && props.event.originalEmployee.id !== props.event.employee.id) ? `(was ${props.event.originalEmployee.name})` : ''}`}
       </span>
     </div>
     <IndictmentIcons {...props.event} />
