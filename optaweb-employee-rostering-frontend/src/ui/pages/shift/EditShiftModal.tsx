@@ -273,6 +273,19 @@ export class EditShiftModal extends React.Component<Props & WithTranslation, Sta
               }))}
             />
           </InputGroup>
+          <InputGroup>
+            <Label>{t('type')}</Label>
+            <TypeaheadSelectInput
+              aria-label="Type"
+              emptyText="Select Type..."
+              value={this.state.editedValue.type}
+              options={['GOING', 'RETURNING', 'ONEWAY'] as ('GOING'|'RETURNING'|'ONEWAY')[]}
+              optionToStringMap={type => this.props.t(`${type}`)}
+              onChange={type => this.setState(prevState => ({
+                editedValue: { ...prevState.editedValue, type },
+              }))}
+            />
+          </InputGroup>
         </Form>
       </Modal>
     );

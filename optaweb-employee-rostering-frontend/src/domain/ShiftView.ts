@@ -43,16 +43,18 @@ export const shiftToShiftView = (shift: Shift): ShiftView => ({
   originalEmployeeId: shift.originalEmployee ? shift.originalEmployee.id as number : null,
   rotationEmployeeId: shift.rotationEmployee ? shift.rotationEmployee.id as number : null,
   indictmentScore: shift.indictmentScore,
+  type: shift.type,
 });
 
 export const shiftViewToDomainObjectView = (view: ShiftView): DomainObjectView<Shift> => ({
-  ...objectWithout(view, 'employeeId', 'spotId', 'rotationEmployeeId', 'requiredSkillSetIdList', 'requiredSkillSet2IdList', 'originalEmployeeId'),
+  ...objectWithout(view, 'employeeId', 'spotId', 'rotationEmployeeId', 'requiredSkillSetIdList', 'requiredSkillSet2IdList', 'originalEmployeeId', 'type'),
   employee: view.employeeId,
   spot: view.spotId,
   rotationEmployee: view.rotationEmployeeId,
   requiredSkillSet: view.requiredSkillSetIdList,
   requiredSkillSet2: view.requiredSkillSet2IdList,
   originalEmployee: view.originalEmployeeId,
+  type: view.type,
 });
 
 export interface ShiftView extends DomainObject {
@@ -76,4 +78,5 @@ export interface ShiftView extends DomainObject {
   contractMinutesViolationPenaltyList?: ContractMinutesViolation[];
   noBreakViolationList?: NoBreakViolation[];
   publishedShiftReassignedPenaltyList?: PublishedShiftReassignedPenalty[];
+  type: 'GOING'|'RETURNING'|'ONEWAY';
 }

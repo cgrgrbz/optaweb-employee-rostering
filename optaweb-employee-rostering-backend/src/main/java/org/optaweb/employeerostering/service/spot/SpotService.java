@@ -87,6 +87,11 @@ public class SpotService extends AbstractRestService {
 
         return getSpotList(tenantId);
     }
+
+    @Transactional
+    public Spot findSpotByCode(Integer tenantId, String code) {
+        return spotRepository.findSpotByCode(tenantId, code);
+    }
     
     @Transactional
     public List<Spot> getSpotList(Integer tenantId) {

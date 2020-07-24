@@ -16,14 +16,16 @@
 
 package org.optaweb.employeerostering.service.rotation;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
-
 import org.optaweb.employeerostering.domain.employee.Employee;
 import org.optaweb.employeerostering.domain.roster.RosterState;
 import org.optaweb.employeerostering.domain.rotation.ShiftTemplate;
@@ -38,6 +40,7 @@ import org.optaweb.employeerostering.service.roster.RosterService;
 import org.optaweb.employeerostering.service.skill.SkillService;
 import org.optaweb.employeerostering.service.spot.SpotService;
 import org.optaweb.employeerostering.service.vehicle.VehicleService;
+import org.optaweb.employeerostering.util.RotationListXlsxFileIO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -53,8 +56,10 @@ public class RotationService extends AbstractRestService {
     private final VehicleService vehicleService;
     
 
+    private final RotationListXlsxFileIO rotationListXlsxFileIO;
+
     public RotationService(ShiftTemplateRepository shiftTemplateRepository, RosterService rosterService,
-                           SpotService spotService, SkillService skillService, EmployeeService employeeService, VehicleService vehicleService) {
+                           SpotService spotService, SkillService skillService, EmployeeService employeeService, VehicleService vehicleService, RotationListXlsxFileIO rotationListXlsxFileIO) {
         this.shiftTemplateRepository = shiftTemplateRepository;
 
         this.rosterService = rosterService;
@@ -71,6 +76,8 @@ public class RotationService extends AbstractRestService {
         
         this.vehicleService = vehicleService;
         Assert.notNull(vehicleService, "vehicleService must not be null.");
+        
+        this.rotationListXlsxFileIO = rotationListXlsxFileIO;
     }
 
     @Transactional
@@ -202,4 +209,24 @@ public class RotationService extends AbstractRestService {
         shiftTemplateRepository.deleteById(id);
         return true;
     }
-}
+
+    @Transactional
+    public List<ShiftTemplateView> importShiftTemplatesFromExcel(Integer tenantId, InputStream excelInputStream) throws IOException {
+    	
+        List<ShiftTemplateView> excelRotationList = rotationListXlsxFileIO.getShiftTemplateListFromExcelFile(tenantId, excelInputStream);
+
+        final Set<ShiftTemplateView> addedRotationSet = new HashSet<>();
+        
+        excelRotationList.stream().flatMap(shiftTemplateView -> {
+
+        	addedRotationSet.add(shiftTemplateView);
+        	
+            return Stream.of(shiftTemplateView);
+            
+        }).forEach(shiftTemplateView -> {
+        	
+            createShiftTemplate(tenantId, shiftTemplateView);
+            
+        });
+        return getShiftTemplateList(tenantId);
+    }}

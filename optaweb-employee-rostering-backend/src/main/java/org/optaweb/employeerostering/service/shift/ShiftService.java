@@ -216,6 +216,8 @@ public class ShiftService extends AbstractRestService {
 		
 		oldShift.setRequiredSkillSet(newShift.getRequiredSkillSet());
 		oldShift.setRequiredSkillSet2(newShift.getRequiredSkillSet2());
+		
+		oldShift.setType(newShift.getType());
 
 		// Flush to increase version number before we duplicate it to ShiftView
 		Shift updatedShift = shiftRepository.saveAndFlush(oldShift);

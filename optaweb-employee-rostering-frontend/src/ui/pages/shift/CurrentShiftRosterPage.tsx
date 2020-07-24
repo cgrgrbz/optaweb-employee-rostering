@@ -383,6 +383,7 @@ export class ShiftRosterPage extends React.Component<Props, State> {
                 originalEmployee: null,
                 requiredSkillSet: [],
                 requiredSkillSet2: [],
+                type: 'ONEWAY',
               });
             }
           }

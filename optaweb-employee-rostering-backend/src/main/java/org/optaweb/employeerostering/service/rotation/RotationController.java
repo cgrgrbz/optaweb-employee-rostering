@@ -16,6 +16,7 @@
 
 package org.optaweb.employeerostering.service.rotation;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ import javax.validation.constraints.Min;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.optaweb.employeerostering.domain.rotation.view.ShiftTemplateView;
+import org.optaweb.employeerostering.domain.vehicle.Vehicle;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
@@ -36,7 +38,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/rest/tenant/{tenantId}/rotation")
@@ -86,5 +90,14 @@ public class RotationController {
                                                                  @RequestBody @Valid
                                                                          ShiftTemplateView shiftTemplateView) {
         return new ResponseEntity<>(rotationService.updateShiftTemplate(tenantId, shiftTemplateView), HttpStatus.OK);
+    }
+    
+    @ApiOperation("Import shiftTemplates from an Excel file")
+    @PostMapping("/import")
+    public ResponseEntity<List<ShiftTemplateView>> addShiftTemplatesFromExcelFile(@PathVariable @Min(0) Integer tenantId,
+                                                                    @RequestParam("file") MultipartFile excelDataFile)
+            throws IOException {
+
+        return new ResponseEntity<>(rotationService.importShiftTemplatesFromExcel(tenantId, excelDataFile.getInputStream()), HttpStatus.OK);
     }
 }

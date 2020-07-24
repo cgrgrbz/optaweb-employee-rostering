@@ -50,4 +50,5 @@ export interface Shift extends DomainObject {
   contractMinutesViolationPenaltyList?: ContractMinutesViolation[];
   noBreakViolationList?: NoBreakViolation[];
   publishedShiftReassignedPenaltyList?: PublishedShiftReassignedPenalty[];
+  type: 'GOING'|'RETURNING'|'ONEWAY';
 }
