@@ -213,6 +213,8 @@ public class RotationService extends AbstractRestService {
     @Transactional
     public List<ShiftTemplateView> importShiftTemplatesFromExcel(Integer tenantId, InputStream excelInputStream) throws IOException {
     	
+    	final int[] count = {0};
+    	
         List<ShiftTemplateView> excelRotationList = rotationListXlsxFileIO.getShiftTemplateListFromExcelFile(tenantId, excelInputStream);
 
         final Set<ShiftTemplateView> addedRotationSet = new HashSet<>();
@@ -224,7 +226,8 @@ public class RotationService extends AbstractRestService {
             return Stream.of(shiftTemplateView);
             
         }).forEach(shiftTemplateView -> {
-        	
+        	count[0]++;
+        	System.out.println(count[0]);
             createShiftTemplate(tenantId, shiftTemplateView);
             
         });

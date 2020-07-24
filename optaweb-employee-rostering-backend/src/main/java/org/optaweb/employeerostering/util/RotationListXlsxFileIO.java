@@ -94,10 +94,10 @@ public class RotationListXlsxFileIO {
 				String spotCode = df.formatCellValue(row.getCell(0));
 				shiftTemplate.setSpot(spotService.findSpotByCode(tenantId, spotCode));
 
-				int startDayOffset = Integer.parseInt(row.getCell(3).getStringCellValue());
+				int startDayOffset = (int) row.getCell(3).getNumericCellValue();
 				shiftTemplate.setStartDayOffset(startDayOffset);
 				
-				int endDayOffset = Integer.parseInt(row.getCell(5).getStringCellValue());
+				int endDayOffset = (int) row.getCell(5).getNumericCellValue();
 				shiftTemplate.setEndDayOffset(endDayOffset);
 
 				//get time as string, convert it to LocalTime to set it
@@ -113,8 +113,8 @@ public class RotationListXlsxFileIO {
 				shiftTemplate.setRotationEmployee(null);
 				shiftTemplate.setRotationVehicle(null);
 				
-				Double readType = row.getCell(7).getNumericCellValue();
-				shiftTemplate.setType(ShiftType.values()[readType.intValue()]);
+				int type = (int) row.getCell(7).getNumericCellValue();
+				shiftTemplate.setType(ShiftType.values()[type]);
 
 				String skillListString = (row.getCell(1) != null) ? row.getCell(1).getStringCellValue() : "";
 				String skillListString2 = (row.getCell(2) != null) ? row.getCell(2).getStringCellValue() : "";
@@ -139,6 +139,7 @@ public class RotationListXlsxFileIO {
 
 				ShiftTemplateView shiftTemplateView = new ShiftTemplateView(rotationLength, shiftTemplate);
 				out.add(shiftTemplateView);
+				System.out.println(i + " of " + worksheet.getLastRowNum());
 			}
 			return out;
 		}
