@@ -78,18 +78,6 @@ rule "Required spot skill(s) for a vehicle"
         scoreHolder.addHardConstraintMatch(kcontext, -100);
 end
 
-rule "Unavailable time slot for an vehicle"
-    when
-        $availability: VehicleAvailability(
-                $v : vehicle,
-                $startDateTime : startDateTime,
-                $endDateTime : endDateTime)
-        Shift(vehicle == $v,
-            $startDateTime < endDateTime,
-            $endDateTime > startDateTime)
-    then
-        scoreHolder.addHardConstraintMatch(kcontext, -50);
-end
 // ############################################################################
 // Hard constraints
 // ############################################################################

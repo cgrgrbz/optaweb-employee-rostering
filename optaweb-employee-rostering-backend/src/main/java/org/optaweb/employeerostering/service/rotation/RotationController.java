@@ -25,7 +25,6 @@ import javax.validation.constraints.Min;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.optaweb.employeerostering.domain.rotation.view.ShiftTemplateView;
-import org.optaweb.employeerostering.domain.vehicle.Vehicle;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
