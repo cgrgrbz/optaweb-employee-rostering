@@ -4,4 +4,12 @@
     <scoreDrl>org/optaweb/employeerostering/service/solver/employeeRosteringScoreRules.drl</scoreDrl>
     <!--<constraintProviderClass>org.optaweb.employeerostering.service.solver.EmployeeRosteringConstraintProvider</constraintProviderClass>-->
   </scoreDirectorFactory>
+    <constructionHeuristic>
+	    <changeMoveSelector>
+	      <valueSelector variableName="employee"/>
+	    </changeMoveSelector>
+	    <changeMoveSelector>
+	      <valueSelector variableName="vehicle"/>
+	    </changeMoveSelector>
+  </constructionHeuristic>
 </solver>
