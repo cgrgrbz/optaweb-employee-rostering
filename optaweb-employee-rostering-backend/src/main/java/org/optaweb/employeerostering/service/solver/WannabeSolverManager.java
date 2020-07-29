@@ -133,7 +133,7 @@ public class WannabeSolverManager implements ApplicationRunner {
                 tenantIdToSolverMap.put(tenantId, solver);
                 solver.addEventListener(event -> {
                     if (event.isEveryProblemFactChangeProcessed()) {
-                        logger.info("  New best solution found for tenantId ({}).", tenantId);
+                        logger.info("  New best solution found for tenantId ({}) score of ({}).", tenantId, event.getNewBestScore());
                         Roster newBestRoster = event.getNewBestSolution();
                         tenantIdToBestSolutionMap.put(tenantId, newBestRoster);
                         // TODO if this throws an OptimisticLockingException, does it kill the solver?
