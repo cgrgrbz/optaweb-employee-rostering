@@ -29,6 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.Min;
 
 import org.optaplanner.core.api.score.buildin.hardmediumsoftlong.HardMediumSoftLongScore;
 import org.optaplanner.core.api.score.constraint.Indictment;
@@ -186,7 +187,7 @@ public class RosterService extends AbstractRestService {
 		// one we just fetched, so the
 		// score might be inaccurate
 		Roster roster = solverManager.getRoster(tenantId);
-		if (roster == null) {
+		if (roster == null || solverManager.getSolverStatus(tenantId) != SolverStatus.SOLVING) {
 			roster = buildRoster(tenantId);
 		}
 		Map<Object, Indictment> indictmentMap = indictmentUtils.getIndictmentMapForRoster(roster);
@@ -264,7 +265,7 @@ public class RosterService extends AbstractRestService {
 				startDate.atStartOfDay(timeZone).toOffsetDateTime(), endDate.atStartOfDay(timeZone).toOffsetDateTime());
 
 		Roster roster = solverManager.getRoster(tenantId);
-		if (roster == null) {
+		if (roster == null || solverManager.getSolverStatus(tenantId) != SolverStatus.SOLVING) {
 			roster = buildRoster(tenantId);
 		}
 		Map<Object, Indictment> indictmentMap = indictmentUtils.getIndictmentMapForRoster(roster);
@@ -538,5 +539,11 @@ public class RosterService extends AbstractRestService {
 				publishTo.atStartOfDay(timeZone).toOffsetDateTime());
 		publishedShifts.forEach(s -> s.setOriginalEmployee(s.getEmployee()));
 		shiftRepository.saveAll(publishedShifts);
+	}
+
+	public void explainScore(@Min(0) Integer tenantId) {
+		
+		RosterState rosterState = getRosterState(tenantId);
+		
 	}
 }
